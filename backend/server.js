@@ -3,20 +3,18 @@ const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
-const pool = require('./db').default; // ← Connexion à MySQL
+const pool = require('./db').default;
 
 const app = express();
 const PORT = 4000;
 
 app.use(cors());
 
-// Créer le dossier upload s'il n'existe pas
 const uploadDir = path.join(__dirname, 'upload');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
 }
 
-// Configuration Multer
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, uploadDir);
@@ -27,23 +25,20 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// Route POST pour uploader et enregistrer en BDD
 app.post('/upload', upload.array('images'), async (req, res) => {
   try {
     const files = req.files;
 
-    const values = files.map(file => [
-      file.filename,
-      file.path,
-      file.mimetype,
-      file.size
-    ]);
-
     const conn = await pool.getConnection();
-    await conn.query(
-      'INSERT INTO images (filename, filepath, mimetype, size) VALUES ?',
-      [values]
-    );
+
+    for (const file of files) {
+      const imageData = fs.readFileSync(file.path); // Lire l'image binaire
+      await conn.query(
+        'INSERT INTO images (filename, path, data, mimetype) VALUES (?, ?, ?, ?)',
+        [file.filename, file.path, imageData, file.mimetype]
+      );
+    }
+
     conn.release();
 
     res.status(200).json({

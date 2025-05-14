@@ -2,18 +2,16 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 const pool = require('./db');
 
 const router = express.Router();
 
-// Créer le dossier uploads si nécessaire
-const fs = require('fs');
 const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
 }
 
-// Configuration Multer
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, uploadDir);
@@ -22,31 +20,27 @@ const storage = multer.diskStorage({
     cb(null, Date.now() + '-' + file.originalname);
   }
 });
-
 const upload = multer({ storage });
 
-// Route POST /upload
 router.post('/upload', upload.array('files'), async (req, res) => {
   try {
     const files = req.files;
 
-    const inserts = files.map(file => [
-      file.filename,
-      file.path,
-      file.mimetype,
-      file.size
-    ]);
-
     const conn = await pool.getConnection();
-    await conn.query(
-      'INSERT INTO images (filename, filepath, mimetype, size) VALUES ?',
-      [inserts]
-    );
+
+    for (const file of files) {
+      const imageData = fs.readFileSync(file.path); // Lire le fichier en binaire
+      await conn.query(
+        'INSERT INTO images (filename, path, data, mimetype) VALUES (?, ?, ?, ?)',
+        [file.filename, file.path, imageData, file.mimetype]
+      );
+    }
+
     conn.release();
 
-    res.status(200).json({ message: 'Images uploadées et sauvegardées en base.' });
+    res.status(200).json({ message: 'Images uploadées et données stockées avec succès.' });
   } catch (err) {
-    console.error(err);
+    console.error('Erreur:', err);
     res.status(500).json({ error: 'Erreur lors de l’upload ou de l’enregistrement en base.' });
   }
 });
