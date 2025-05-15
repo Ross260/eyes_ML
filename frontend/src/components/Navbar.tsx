@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
@@ -29,18 +28,21 @@ const Navbar = () => {
               <Link to="/" onClick={scrollToTop} className="text-gray-700 hover:text-medical-600 px-3 py-2 rounded-md text-sm font-medium">
                 Accueil
               </Link>
-              <a href="#educational" className="text-gray-700 hover:text-medical-600 px-3 py-2 rounded-md text-sm font-medium">
+              <a href="/#educational" className="text-gray-700 hover:text-medical-600 px-3 py-2 rounded-md text-sm font-medium">
                 Informations
               </a>
-              <a href="#upload" className="text-gray-700 hover:text-medical-600 px-3 py-2 rounded-md text-sm font-medium">
+              <a href="/#upload" className="text-gray-700 hover:text-medical-600 px-3 py-2 rounded-md text-sm font-medium">
                 Upload
               </a>
-              <a href="#webinars" className="text-gray-700 hover:text-medical-600 px-3 py-2 rounded-md text-sm font-medium">
+              <a href="/#webinars" className="text-gray-700 hover:text-medical-600 px-3 py-2 rounded-md text-sm font-medium">
                 Webinaires
               </a>
-              <a href="#contact" className="text-gray-700 hover:text-medical-600 px-3 py-2 rounded-md text-sm font-medium">
+              <a href="/#contact" className="text-gray-700 hover:text-medical-600 px-3 py-2 rounded-md text-sm font-medium">
                 Contact
               </a>
+              <Link to="/about" className="text-gray-700 hover:text-medical-600 px-3 py-2 rounded-md text-sm font-medium">
+                À propos
+              </Link>
               <Button className="ml-4 bg-medical-600 hover:bg-medical-700 text-white">
                 Se Connecter
               </Button>
@@ -66,18 +68,21 @@ const Navbar = () => {
             <Link to="/" onClick={scrollToTop} className="block text-gray-700 hover:text-medical-600 px-3 py-2 rounded-md text-base font-medium">
               Accueil
             </Link>
-            <a href="#educational" className="block text-gray-700 hover:text-medical-600 px-3 py-2 rounded-md text-base font-medium">
+            <a href="/#educational" className="block text-gray-700 hover:text-medical-600 px-3 py-2 rounded-md text-base font-medium">
               Informations
             </a>
-            <a href="#upload" className="block text-gray-700 hover:text-medical-600 px-3 py-2 rounded-md text-base font-medium">
+            <a href="/#upload" className="block text-gray-700 hover:text-medical-600 px-3 py-2 rounded-md text-base font-medium">
               Upload
             </a>
-            <a href="#webinars" className="block text-gray-700 hover:text-medical-600 px-3 py-2 rounded-md text-base font-medium">
+            <a href="/#webinars" className="block text-gray-700 hover:text-medical-600 px-3 py-2 rounded-md text-base font-medium">
               Webinaires
             </a>
-            <a href="#contact" className="block text-gray-700 hover:text-medical-600 px-3 py-2 rounded-md text-base font-medium">
+            <a href="/#contact" className="block text-gray-700 hover:text-medical-600 px-3 py-2 rounded-md text-base font-medium">
               Contact
             </a>
+            <Link to="/about" className="block text-gray-700 hover:text-medical-600 px-3 py-2 rounded-md text-base font-medium">
+              À propos
+            </Link>
             <div className="pt-4">
               <Button className="w-full bg-medical-600 hover:bg-medical-700 text-white">
                 Se Connecter
