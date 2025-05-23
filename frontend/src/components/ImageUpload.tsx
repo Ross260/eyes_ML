@@ -66,42 +66,11 @@ const ImageUpload = () => {
     setFiles(newFiles);
   };
 
-  // const handleSubmit = (e: React.FormEvent) => {
-  //   e.preventDefault();
-    
-  //   if (!isConsenting || !isAnonymized) {
-  //     toast({
-  //       title: "Vérification nécessaire",
-  //       description: "Merci de confirmer votre consentement et l'anonymisation des images.",
-  //       variant: "destructive",
-  //     });
-  //     return;
-  //   }
-    
-  //   if (files.length === 0) {
-  //     toast({
-  //       title: "Aucun fichier",
-  //       description: "Veuillez télécharger au moins une image.",
-  //       variant: "destructive",
-  //     });
-  //     return;
-  //   }
-
-  //   // Simulation de l'envoi des fichiers
-  //   toast({
-  //     title: "Téléchargement réussi!",
-  //     description: `${files.length} image(s) ont été téléchargées avec succès. Merci pour votre contribution!`,
-  //   });
-
-  //   // Réinitialiser le formulaire
-  //   setFiles([]);
-  //   setIsConsenting(false);
-  //   setIsAnonymized(false);
-  // };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault(); // Empêche le rechargement de page (l'envoie automatique par le navigateur)
   
+     // Vérifie si l'utilisateur a coché consentement et anonymisation
     if (!isConsenting || !isAnonymized) {
       toast({
         title: "Vérification nécessaire",
@@ -141,7 +110,7 @@ const ImageUpload = () => {
       const result = await response.json();
       toast({
         title: "Téléchargement réussi!",
-        description: `${result.files.length} image(s) ont été téléchargées avec succès.`,
+        description: `${result.files.length} image(s) téléchargées avec succès.`,
       });
   
       setFiles([]);
@@ -254,8 +223,7 @@ const ImageUpload = () => {
               <div className="mt-8">
                 <Button 
                   type="submit" 
-                  className="w-full bg-medical-600 hover:bg-medical-700"
-                >
+                  className="w-full bg-medical-600 hover:bg-medical-700">
                   Soumettre les images
                 </Button>
               </div>
