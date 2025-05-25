@@ -43,8 +43,10 @@ const Navbar = () => {
               <Link to="/about" className="text-gray-700 hover:text-medical-600 px-3 py-2 rounded-md text-sm font-medium">
                 À propos
               </Link>
-              <Button className="ml-4 bg-medical-600 hover:bg-medical-700 text-white">
-                Se Connecter
+                <Button className="ml-4 bg-medical-600 hover:bg-medical-700 text-white" asChild>
+                <Link to="/login">
+                  Se Connecter
+                </Link>
               </Button>
             </div>
           </div>
@@ -84,8 +86,10 @@ const Navbar = () => {
               À propos
             </Link>
             <div className="pt-4">
-              <Button className="w-full bg-medical-600 hover:bg-medical-700 text-white">
-                Se Connecter
+              <Button className="w-full bg-medical-600 hover:bg-medical-700 text-white" asChild>
+                <Link to="/login">
+                  Se Connecter
+                </Link>
               </Button>
             </div>
           </div>
