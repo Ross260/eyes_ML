@@ -1,10 +1,16 @@
+
 const express = require('express');
 const multer = require('multer');
 const fs = require('fs');
+const jwt = require('jsonwebtoken');
 const path = require('path');
 const cors = require('cors');
 const pool = require('./db').default;
 const bcrypt = require('bcrypt');
+require('dotenv').config();
+
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const app = express();
 const PORT = 4000;
@@ -86,6 +92,55 @@ app.post('/register', async (req, res) => {
   }
 });
 
+// === Login ROUTE ===
+app.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const conn = await pool.getConnection();
+
+    // Chercher l'utilisateur
+    const [rows] = await conn.query('SELECT id, email, mot_de_passe AS password FROM users WHERE email = ?', [email]);
+
+    conn.release();
+
+    if (rows.length === 0) {
+      return res.status(401).json({ message: 'Email ou mot de passe incorrect.' });
+    }
+
+    const user = rows[0];
+
+    if (!user.password) {
+      return res.status(500).json({ message: 'Erreur serveur : mot de passe manquant.' });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Email ou mot de passe incorrect.' });
+    }
+
+    // Générer le token JWT
+    const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, {
+      expiresIn: '1h'
+    });
+    if (!process.env.JWT_SECRET) {
+      throw new Error("La clé JWT_SECRET n'est pas définie. Vérifiez votre .env");
+    }
+
+
+    res.status(200).json({ token, message: 'Connexion réussie.' });
+  } catch (err) {
+    console.error('Erreur pendant la connexion :', err);
+    res.status(500).json({ message: 'Erreur serveur.' });
+  }
+});
+
+
+
 app.listen(PORT, () => {
   console.log(`✅ Server running on http://localhost:${PORT}`);
 });
+
+
+

@@ -13,24 +13,51 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Simuler une connexion réussie
-    if (email && password) {
-      toast({
-        title: "Connexion réussie",
-        description: "Bienvenue sur RetinaML",
-      });
-      navigate("/");
-    } else {
-      toast({
-        title: "Erreur de connexion",
-        description: "Veuillez remplir tous les champs",
-        variant: "destructive",
-      });
+  const handleLogin = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  if (!email || !password) {
+    toast({
+      title: "Erreur de connexion",
+      description: "Veuillez remplir tous les champs",
+      variant: "destructive",
+    });
+    return;
+  }
+
+  try {
+    const response = await fetch("http://localhost:4000/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Erreur inconnue");
     }
-  };
+
+    // Stocker le token dans localStorage
+    localStorage.setItem("token", data.token);
+
+    toast({
+      title: "Connexion réussie",
+      description: "Bienvenue sur RetinaML",
+    });
+
+    navigate("/");
+  } catch (error: any) {
+    toast({
+      title: "Erreur de connexion",
+      description: error.message,
+      variant: "destructive",
+    });
+  }
+};
+
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
